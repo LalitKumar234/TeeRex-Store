@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { CartState } from '../context/context';
+import EmptyCart from '../components/EmptyCart';
 
 
 const Cart = () => {
@@ -10,6 +11,12 @@ const Cart = () => {
     setTotalPrice(cart.reduce((acc, curr) =>
       acc + curr.price * curr.qty, 0))
   }, [cart])
+
+  if (!cart.length)
+  return <div className='no-item'>
+    <EmptyCart/>
+    <h3>You have no item in the Cart</h3>
+  </div>
 
   return (
     <div className='cart-container'>

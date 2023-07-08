@@ -90,6 +90,19 @@
 .total-price h3{
   margin-top: 1rem;
 }
+.flex-cnt{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.github{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: black;
+
+}
 
 @media screen and (max-width: 560px){
   .home-container{

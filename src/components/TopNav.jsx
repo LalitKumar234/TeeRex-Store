@@ -3,6 +3,7 @@ import './style.css'
 import { AiOutlineShoppingCart } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
 import { CartState } from '../context/context';
+import { BsGithub } from 'react-icons/bs';
 
 const TopNav = () => {
     const { state: { cart } } = CartState()
@@ -10,9 +11,15 @@ const TopNav = () => {
     return (
         <nav className='nav-container'>
             <div className='nav-inner'>
-                <Link to="/" className='link'>
-                    <div className="logo">TeeRex <span>Store</span></div>
-                </Link>
+                <div className='flex-cnt'>
+                    <Link to="/" className='link'>
+                        <div className="logo">TeeRex <span>Store</span></div>
+                    </Link>
+                    <a href="https://github.com/LalitKumar234/TeeRex-Store" target='_blank' className='github link'>
+                        <BsGithub size={25} />
+                    </a>
+
+                </div>
                 <ul className='menus'>
                     <Link to="/" className='link'>
                         <li>Products</li>

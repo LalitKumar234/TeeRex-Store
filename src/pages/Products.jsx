@@ -19,59 +19,64 @@ const Products = () => {
 
 
   const handleColors = (e) => {
-    let updatedList = [...filterState.colors]
-    if (e.target.checked) updatedList = [...filterState.colors, e.target.value]
-    else updatedList.splice(filterState.colors.indexOf(e.target.value), 1);
-    setFilterState({ ...filterState, colors: updatedList })
+    let newItems = [...filterState.colors]
+    if (e.target.checked) newItems = [...filterState.colors, e.target.value]
+    else newItems.splice(filterState.colors.indexOf(e.target.value), 1);
+    setFilterState({ ...filterState, colors: newItems })
 
   }
 
   const handleGender = (e) => {
-    let updatedList = [...filterState.gender]
-    if (e.target.checked) updatedList = [...filterState.gender, e.target.value]
-    else updatedList.splice(filterState.gender.indexOf(e.target.value), 1);
-    setFilterState({ ...filterState, gender: updatedList })
+    let newItems = [...filterState.gender]
+    if (e.target.checked) newItems = [...filterState.gender, e.target.value]
+    else newItems.splice(filterState.gender.indexOf(e.target.value), 1);
+    setFilterState({ ...filterState, gender: newItems })
   }
   const handleType = (e) => {
-    let updatedList = [...filterState.type]
-    if (e.target.checked) updatedList = [...filterState.type, e.target.value]
-    else updatedList.splice(filterState.type.indexOf(e.target.value), 1);
-    setFilterState({ ...filterState, type: updatedList })
+    let newItems = [...filterState.type]
+    if (e.target.checked) newItems = [...filterState.type, e.target.value]
+    else newItems.splice(filterState.type.indexOf(e.target.value), 1);
+    setFilterState({ ...filterState, type: newItems })
   }
 
   const handlePrice = (e) => {
-    let updatedList = [...filterState.priceRange]
-    if (e.target.checked) updatedList = [...filterState.priceRange, e.target.value]
-    else updatedList.splice(filterState.priceRange.indexOf(e.target.value), 1)
-    setFilterState({ ...filterState, priceRange: updatedList })
+    let newItems = [...filterState.priceRange]
+    if (e.target.checked) newItems = [...filterState.priceRange, e.target.value]
+    else newItems.splice(filterState.priceRange.indexOf(e.target.value), 1)
+    setFilterState({ ...filterState, priceRange: newItems })
   }
   const filteredItems = () => {
-    let updatedItems = products;
-
+    let filteredItems = products;
+    const searchItem = filterState.searchInput.toLowerCase();
+    const searchAttributes = ['color', 'gender', 'name', 'price'];
     if (filterState.searchInput) {
-      updatedItems = updatedItems.filter(item => {
-        const searchItem = filterState.searchInput.toLowerCase()
-
-        return item.name.toLowerCase().includes(searchItem) ||
-          item.color.toLowerCase().includes(searchItem) ||
-          item.type.toLowerCase().includes(searchItem)
-      }
-      )
+      filteredItems = filteredItems.filter((item) =>
+        searchAttributes.some((key) => {
+          const property = item[key];
+          if (typeof property === 'string') {
+            return property.toLowerCase().includes(searchItem);
+          } else if (typeof property === 'number') {
+            return property.toString().toLowerCase().includes(searchItem);
+          }
+          return false;
+        })
+      );
     }
+
     if (filterState.colors.length) {
-      updatedItems = updatedItems.filter(item =>
+      filteredItems = filteredItems.filter(item =>
         filterState.colors.includes(item.color.toLowerCase()))
     }
     if (filterState.gender.length) {
-      updatedItems = updatedItems.filter(item =>
+      filteredItems = filteredItems.filter(item =>
         filterState.gender.includes(item.gender.toLowerCase()))
     }
     if (filterState.type.length) {
-      updatedItems = updatedItems.filter(item =>
+      filteredItems = filteredItems.filter(item =>
         filterState.type.includes(item.type.toLowerCase()))
     }
     if (filterState.priceRange.length) {
-      updatedItems = updatedItems.filter((item) => {
+      filteredItems = filteredItems.filter((item) => {
         const itemPrice = item.price;
         return filterState.priceRange.some(
           (range) => {
@@ -81,12 +86,13 @@ const Products = () => {
         );
       });
     }
-    setFilter(updatedItems)
+    setFilter(filteredItems)
   }
 
 
   useEffect(() => {
     filteredItems()
+    console.log(filter)
   }, [filterState]);
 
   useEffect(() => {
@@ -94,6 +100,7 @@ const Products = () => {
       .then((response) => {
         setProducts(response.data)
         setFilter(response.data)
+
       })
       .catch((error) => {
         console.log(error);
@@ -105,7 +112,7 @@ const Products = () => {
     <>
 
       <SideNav
-      showSidebar={showSidebar}
+        showSidebar={showSidebar}
         handleColors={handleColors}
         handleGender={handleGender}
         handleType={handleType}
@@ -117,7 +124,7 @@ const Products = () => {
         <div className='search-bar-container'>
           <input
             type="text"
-            placeholder='Search for Products...'
+            placeholder='Search products based on color, type, price...'
             onChange={(e) =>
               setFilterState({ ...filterState, searchInput: e.target.value })}
             value={filterState.searchInput}
